@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class BussinessOwenr extends Model implements Authenticatable
 {
     use HasFactory;
+    protected $guard='business_owners';
     
     protected $fillable = [
         'name',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterBusiness;
+use App\Http\Requests\RegisterBussiness;
 use App\Http\Requests\StoreLoginRequest;
 use App\Http\Resources\BussinessOwenrResource;
 use App\Models\BussinessOwenr;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthBussinessController extends Controller
 {
-    public function register(RegisterBusiness $request)
+    public function register(RegisterBussiness $request)
     {
         $validatedData = $request->validated();
 
@@ -22,13 +23,18 @@ class AuthBussinessController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'category_id' => $validatedData['category_id'],
+
             'password' => bcrypt($validatedData['password']),
+
         ]);
+        $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'status' => 200,
             'message' => trans('api.register_success'),
             'data' => $user,
+            'token' => $token
+
         ]);
     }
  
@@ -45,8 +51,7 @@ class AuthBussinessController extends Controller
 
     $user = Auth::guard('business_owners')->user();
 
-    // Generate a token for the authenticated user
-    $token = $user->createToken('authToken')->plainTextToken;
+     $token = $user->createToken('authToken')->plainTextToken;
 
     $userData = [
         'name' => $user->name,
@@ -71,7 +76,8 @@ class AuthBussinessController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => trans('api.logout'),
+            'message' => 'User Logout success',
+          
         ]);
     }
 }

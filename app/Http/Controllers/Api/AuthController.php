@@ -18,19 +18,22 @@ class AuthController extends Controller
 
         $user = User::create([
              'name' => $validatedData['name'],
+             'category_id' => $validatedData['category_id'],
              'email' => $validatedData['email'],
              'instagram' => $validatedData['instagram'],
              'facebook' => $validatedData['facebook'],
              'youtube' => $validatedData['youtube'],
              'twitter' => $validatedData['twitter'],
-             'category_id' => $validatedData['businses_type'],
              'password' => bcrypt($validatedData['password']), 
          ]);
+         $token = $user->createToken('authToken')->plainTextToken;
 
          return response()->json([
             'status' => 200,
-            'message' => trans('api.register_success'),
-            'data' => $user
+            'message' => 'User register success',
+            'data' => $user,
+            'token' => $token
+
         ]);
             
     }
@@ -39,47 +42,48 @@ class AuthController extends Controller
     public function login(StoreLoginRequest $request)
     {
         $credentials = $request->validated();
-
+    
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'status' => 401,
                 'message' => trans('api.login_error'),
-                'data' => [
-                     
-                   
-                ]
+                'data' => []
             ]);
-            
         }
-
-        $user = $request->user();
-
+    
+        $user = Auth::user();
+    
         $token = $user->createToken('authToken')->plainTextToken;
-
+    
         $userData = new UserResource($user);
-
-      return response()->json([
-    'status' => 200,
-    'message' => trans('api.login_success'),
-    'data' => [
-        'user' => $userData,
-        'token' => $token
-    ]
-]);
-
-
-     }
+    
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Login success',
+            'data' => [
+                'user' => $userData,
+                'token' => $token
+            ]
+        ]);
+    }
+    
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-
+        $user = $request->user();
+    
+        if ($user) {
+            $user->currentAccessToken()->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'User Logout success',
+            ]);
+        }
+    
         return response()->json([
-            'status' => 200,
-            'message' => trans('api.logout'),
-            
-        
+            'status' => 400,
+            'message' => 'User already logged out or not authenticated',
         ]);
-
-     }
+    }
+    
 }

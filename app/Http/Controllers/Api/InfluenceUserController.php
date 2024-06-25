@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class InfluenceUserController extends Controller
 {
-    public function influnce()
+    public function index()
     {
         $allinflunce=User::all();
         $userData = InfluenceUserResource::collection($allinflunce);
@@ -21,6 +21,16 @@ class InfluenceUserController extends Controller
                 'influncer' => $userData,
              ]
         ]);
+    }
+
+    public function profile($id)
+    {
+       $user=User::find($id);
+        return response()->json([
+        'status' => 200,
+        'message' => 'Profile InfluenceUser .',
+        'data' => $user,
+    ]);
     }
 
     public function rating(Request $request)

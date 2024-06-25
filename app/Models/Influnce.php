@@ -9,5 +9,5 @@ class Influnce extends Model
 {
     use HasFactory;
 
-    protected $table='';
+    protected $table='Influnce';
 }

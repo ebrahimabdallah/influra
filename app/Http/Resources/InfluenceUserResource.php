@@ -18,8 +18,6 @@ class InfluenceUserResource extends JsonResource
             'image'=>$this->image,
             'name'=>$this->name,
             'businses_type'=>$this->businses_type,
-         
-
         ];
     }
 }

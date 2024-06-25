@@ -14,6 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    protected $guard='users';
 
     /**
      * The attributes that are mass assignable.
@@ -29,8 +30,8 @@ class User extends Authenticatable
         'instagram',
         'youtube',
         'image',
-        'businses_type',
-    ];
+        'category_id',
+     ];
 
     /**
      * The attributes that should be hidden for serialization.

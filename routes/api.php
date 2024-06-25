@@ -14,26 +14,31 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {  
     
 
-    Route::post('logout',[AuthController::class, 'logout']);
-    Route::post('logout',[AuthBussinessController::class, 'logout']);
+    Route::post('logout/user',[AuthController::class, 'logout']);
+    Route::post('logout/bussiness',[AuthBussinessController::class, 'logout']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
-    Route::post('/profile/update', [ProfileController::class, 'update']);
+    Route::post('/profile/update/{id}', [ProfileController::class, 'update']);
 });
 
+
+
+ 
 Route::post('login',[AuthController::class, 'login']);
 Route::post('register',[AuthController::class, 'register']);
 
 Route::post('login_bussiness',[AuthBussinessController::class, 'login']);
 Route::post('register_bussiness',[AuthBussinessController::class, 'register']);
 
+Route::post('rating',[InfluenceUserController::class, 'rating']);  
+Route::get('influence',[InfluenceUserController::class, 'index']);  
+Route::get('influence/profile/{id}',[InfluenceUserController::class, 'profile']);  
 
-Route::get('influence',[InfluenceUserController::class, 'influence']);  
+
 Route::get('business',[BusinessController::class, 'index']);  
 Route::get('about',[AboutController::class, 'about']);  
 
 Route::get('categoryBusiness',[BusinessController::class, 'categoryBusiness']);  
-Route::post('rating',[InfluenceUserController::class, 'rating']);  
 
 Route::get('getPrivcy',[AboutController::class, 'getPrivcy']);  
 

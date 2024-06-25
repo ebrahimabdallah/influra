@@ -25,11 +25,11 @@ class StoreRegister extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|max:255',
-             'category_id' => 'required',
-             'instagram' => 'required',
+              'instagram' => 'required',
              'facebook' => 'required',
              'youtube' => 'required',
              'twitter' => 'required',
+             'category_id'=>'required',
             ];
     }
 }

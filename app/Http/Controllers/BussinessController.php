@@ -19,7 +19,7 @@ class BussinessController extends Controller
         $user = User::create([
              'name' => $validatedData['name'],
              'email' => $validatedData['email'],
-             'category_id'=> $validatedData['category_id'],
+            //  'category_id'=> $validatedData['category_id'],
              'password' => bcrypt($validatedData['password']), 
          ]);
 

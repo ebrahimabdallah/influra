@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,9 +31,17 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateProfileRequest $request)
+    public function update(Request $request, $id)
     {
         $user = Auth::user();
+    
+        // Ensure the authenticated user matches the ID being updated
+        if ($user->id != $id) {
+            return response()->json([
+                'status' => 403,
+                'message' => trans('unauthorized'),
+            ]);
+        }
     
         $data = [
             'name' => $request->input('name', $user->name),
@@ -40,34 +49,36 @@ class ProfileController extends Controller
             'email' => $request->input('email', $user->email),
         ];
     
-         if ($request->hasFile('image')) {
-             $profilePicturePath = Helper::fileUploader($request->file('image'), 'images');
+        if ($request->hasFile('image')) {
+            $profilePicturePath = Helper::fileUploader($request->file('image'), 'images');
     
             if ($profilePicturePath) {
-                 Helper::deleteFile($user->image);
-    
-                 $data['image'] = $profilePicturePath;
+                Helper::deleteFile($user->image);
+                $data['image'] = $profilePicturePath;
             } else {
-                 return $this->helper->error(400, trans('api.file_upload_error'));
+                return response()->json([
+                    'status' => 400,
+                    'message' => trans('file upload error'),
+                ]);
             }
-        } else {
-            $data['image'] = $user->image;
         }
     
         if ($user->update($data)) {
-
-            $data=([
-            'status' => 200,
-            'message' => trans('influencer List'),
-            'data' => [
-                'profile_user' => $userProfile,
-            ]
+            return response()->json([
+                'status' => 200,
+                'message' => trans('informations update success'),
+                'data' => [
+                    'profile_user' => new UserResource($user),  
+                ],
+            ]);
+        }
+    
+        return response()->json([
+            'status' => 400,
+            'message' => trans('update error'),
         ]);
-    
     }
     
-        return $this->helper->error(200, trans('api.error'));
-    }
 }    
     
  
